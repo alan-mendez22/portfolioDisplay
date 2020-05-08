@@ -1,0 +1,540 @@
+<!doctype html>
+<html>
+    <head>
+        <title>Event Listening</title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/5.1.3/pixi.min.js"></script>
+    </head>
+    <body>
+<script>
+
+    var app = new PIXI.Application({
+        width: 1000, 
+        height: 800,
+        backgroundColor:0x108C9E
+    });
+    
+    document.body.appendChild(app.view);
+    
+    
+    function createNode(x,y,onTex,offTex) {
+    
+        var obj = PIXI.Sprite.from(offTex);
+            
+        obj.interactive = false;
+        obj.isOn = false;
+        obj.alpha = .5;
+        obj.childNode = [];
+        
+        obj.x = x;
+        obj.y = y;
+        obj.anchor.set(.5);
+        
+        obj.onTexture = PIXI.Texture.from(onTex);
+        obj.offTexture = PIXI.Texture.from(offTex);
+        
+        //Toggle
+        obj.toggleOnOff = function() {
+
+            obj.isOn = !obj.isOn;
+
+            if (obj.isOn == true) {
+                obj.texture = obj.onTexture;
+                
+                obj.childNode.forEach(function(o) {
+                    o.activate();
+                });
+                
+            }
+            else {
+                obj.texture = obj.offTexture;
+                
+                obj.childNode.forEach(function(o) {
+                    o.deactivate();
+                });
+                
+            }
+            
+        }
+        
+        obj.on("pointerdown",obj.toggleOnOff);
+        
+        //Activate/Deactivate
+        obj.activate = function() {
+            
+            obj.alpha = 1;
+            obj.interactive = true;
+            
+        }
+        obj.deactivate = function() {
+            
+            obj.alpha = .5;
+            obj.interactive = false;
+            obj.isOn = false;
+            obj.texture = obj.offTexture;
+            
+            obj.childNode.forEach(function(o) {
+                o.deactivate();
+            });
+            
+        }
+        
+        app.stage.addChild(obj);
+        
+        return obj;
+        
+    }
+    
+    //Create Skill Tree Nodes
+    var b1 = createNode(500,50,"assassin.png","assassinGrey.png");
+    
+    var b2 = createNode(150,250,"Akali.png","AkaliGrey.png");
+    
+    var b3 = createNode(500,250,"Shen.png","ShenGrey.png");
+    
+    var b4 = createNode(850,250,"Kennen.png","KennenGrey.png");
+    
+    var b5 = createNode(100,400,"AkaliQ.png","AkaliQGrey.png");
+    
+    var b6 = createNode(200,400,"AkaliR.png","AkaliRGrey.png");
+    
+    var b7 = createNode(450,400,"ShenE.png","ShenEGrey.png");
+    
+    var b8 = createNode(550,400,"ShenR.png","ShenRGrey.png");
+    
+    var b9 = createNode(800,400,"KennenE.png","KennenEGrey.png");
+    
+    var b10 = createNode(900,400,"KennenR.png","KennenRGrey.png");
+    
+    
+    
+    
+    
+//Akali nametag
+    var containerAkali = new PIXI.Container();
+
+    
+    var style = new PIXI.TextStyle({
+        fontSize: 14,
+        wordWrap: true,
+        wordWrapWidth: 80,
+    });
+    var akaliText1 = new PIXI.Text("Akali, the Rogue Assassin",style);
+    
+    akaliText1.x = 119;
+    akaliText1.y = 125;
+    akaliText1.style.fill = 0xFFFFFF;
+    akaliText1.style.align = "center";
+    
+    
+    var akaliBox1 = new PIXI.Graphics();
+    
+    akaliBox1.lineStyle(2, 0xA88238, 1);
+    //akaliBox1.beginFill(0x000000, 1);
+    akaliBox1.drawRoundedRect(100, 120, 100, 60, 16);
+    akaliBox1.endFill();
+    
+    containerAkali.addChild(akaliText1,akaliBox1);
+    app.stage.addChild(containerAkali);
+    containerAkali.visible = false;
+//end akali nametag
+    
+    
+    
+    
+//Shen nametag
+    var containerShen = new PIXI.Container();
+
+    
+    var style = new PIXI.TextStyle({
+        fontSize: 14,
+        wordWrap: true,
+        wordWrapWidth: 80,
+    });
+    
+    var shenText1 = new PIXI.Text("Shen, the Eye of Twilight",style);
+    
+    shenText1.x = 469;
+    shenText1.y = 125;
+    shenText1.style.fill = 0xFFFFFF;
+    shenText1.style.align = "center";
+    
+    
+    var shenBox1 = new PIXI.Graphics();
+    
+    shenBox1.lineStyle(2, 0xA88238, 1);
+    //akaliBox1.beginFill(0x000000, 1);
+    shenBox1.drawRoundedRect(450, 120, 100, 60, 16);
+    shenBox1.endFill();
+    
+    containerShen.addChild(shenText1,shenBox1);
+    app.stage.addChild(containerShen);
+    containerShen.visible = false;
+//end Shen nametag
+    
+
+    
+// Kennen nametag
+    
+    var containerKennen = new PIXI.Container();
+
+    
+    var style = new PIXI.TextStyle({
+        fontSize: 14,
+        wordWrap: true,
+        wordWrapWidth: 80,
+    });
+    
+    var kennenText1 = new PIXI.Text("Kennen, the Heart of the Tempest",style);
+    
+    kennenText1.x = 813;
+    kennenText1.y = 125;
+    kennenText1.style.fill = 0xFFFFFF;
+    kennenText1.style.align = "center";
+    
+    
+    var kennenBox1 = new PIXI.Graphics();
+    
+    kennenBox1.lineStyle(2, 0xA88238, 1);
+    //akaliBox1.beginFill(0x000000, 1);
+    kennenBox1.drawRoundedRect(800, 120, 100, 60, 16);
+    kennenBox1.endFill();
+    
+    containerKennen.addChild(kennenText1,kennenBox1);
+    app.stage.addChild(containerKennen);
+    containerKennen.visible = false;
+
+    
+// END NAME TAGS
+    
+    
+// ABILITY NAMES
+    
+//Akali ability name 1
+    var containerAkaliQ = new PIXI.Container();
+
+    
+    var style = new PIXI.TextStyle({
+        fontSize: 14,
+        wordWrap: true,
+        wordWrapWidth: 185,
+        
+    });
+    
+    var akaliQName = new PIXI.Text("Five Point Strike",style);
+    
+    akaliQName.x = 105;
+    akaliQName.y = 480;
+    akaliQName.style.fill = 0xFFFFFF;
+    
+    var akaliAbilityBox1= new PIXI.Graphics();
+    
+    akaliAbilityBox1.lineStyle(2, 0xA88238, 1);
+    akaliAbilityBox1.drawRoundedRect(60, 480, 200, 130, 16);
+    akaliAbilityBox1.endFill();
+    
+    var akaliQDescription = new PIXI.Text("Akali throws out five kunai, dealing damage based on her bonus Attack Damage and Ability Power and slowing.",style);
+    
+    akaliQDescription.x = 80;
+    akaliQDescription.y = 500;
+    akaliQDescription.style.fill = 0xFFFFFF;
+    akaliQDescription.style.align = "center";
+    
+    
+    
+    containerAkaliQ.addChild(akaliQName,akaliAbilityBox1,akaliQDescription);
+    app.stage.addChild(containerAkaliQ);
+    containerAkaliQ.visible = false;
+    
+    
+    
+// Akali ability name 2  
+    var containerAkaliR = new PIXI.Container();
+
+    
+    var style = new PIXI.TextStyle({
+        fontSize: 14,
+        wordWrap: true,
+        wordWrapWidth: 185,
+        
+    });
+    
+    var akaliRName = new PIXI.Text("Perfect Execution",style);
+    
+    akaliRName.x = 105;
+    akaliRName.y = 480;
+    akaliRName.style.fill = 0xFFFFFF;
+    
+    var akaliAbilityBox2= new PIXI.Graphics();
+    
+    akaliAbilityBox2.lineStyle(2, 0xA88238, 1);
+    akaliAbilityBox2.drawRoundedRect(60, 480, 200, 130, 16);
+    akaliAbilityBox2.endFill();
+    
+    var akaliRDescription = new PIXI.Text("Akali leaps in a direction, damaging enemies she strikes. Re-cast: Akali dashes in a direction, executing all enemies she strikes.",style);
+    
+    akaliRDescription.x = 70;
+    akaliRDescription.y = 500;
+    akaliRDescription.style.fill = 0xFFFFFF;
+    akaliRDescription.style.align = "center";    
+    
+    containerAkaliR.addChild(akaliRName,akaliAbilityBox2,akaliRDescription);
+    app.stage.addChild(containerAkaliR);
+    containerAkaliR.visible = false;    
+    
+    
+    
+//Shen ability name 1
+    var containerShenE = new PIXI.Container();
+
+    
+    var style = new PIXI.TextStyle({
+        fontSize: 14,
+        wordWrap: true,
+        wordWrapWidth: 185,
+        
+    });
+    
+    var ShenEName = new PIXI.Text("Shadow Dash",style);
+    
+    ShenEName.x = 455;
+    ShenEName.y = 480;
+    ShenEName.style.fill = 0xFFFFFF;
+    
+    var shenAbilityBox1= new PIXI.Graphics();
+    
+    shenAbilityBox1.lineStyle(2, 0xA88238, 1);
+    shenAbilityBox1.drawRoundedRect(400, 480, 200, 130, 16);
+    shenAbilityBox1.endFill();
+    
+    var shenEDescription = new PIXI.Text("Shen dashes in a direction, taunting enemies in his path.",style);
+    
+    shenEDescription.x = 415;
+    shenEDescription.y = 500;
+    shenEDescription.style.fill = 0xFFFFFF;
+    shenEDescription.style.align = "center";
+    
+    
+    
+    containerShenE.addChild(ShenEName,shenAbilityBox1,shenEDescription);
+    app.stage.addChild(containerShenE);
+    containerShenE.visible = false;
+    
+    
+    
+// Shen ability name 2  
+    var containerShenR = new PIXI.Container();
+
+    
+    var style = new PIXI.TextStyle({
+        fontSize: 14,
+        wordWrap: true,
+        wordWrapWidth: 185,
+        
+    });
+    
+    var shenRName = new PIXI.Text("Stand United",style);
+    
+    shenRName.x = 455;
+    shenRName.y = 480;
+    shenRName.style.fill = 0xFFFFFF;
+    
+    var shenAbilityBox2= new PIXI.Graphics();
+    
+    shenAbilityBox2.lineStyle(2, 0xA88238, 1);
+    shenAbilityBox2.drawRoundedRect(400, 480, 200, 130, 16);
+    shenAbilityBox2.endFill();
+    
+    var shenRDescription = new PIXI.Text("Shen shields target allied champion from incoming damage, and soon after teleports to their location.",style);
+    
+    shenRDescription.x = 415;
+    shenRDescription.y = 500;
+    shenRDescription.style.fill = 0xFFFFFF;
+    shenRDescription.style.align = "center";    
+    
+    containerShenR.addChild(shenRName,shenAbilityBox2,shenRDescription);
+    app.stage.addChild(containerShenR);
+    containerShenR.visible = false;  
+    
+    
+    
+//Kennen Ability Names 
+
+    var containerKennenE = new PIXI.Container();
+
+    
+    var style = new PIXI.TextStyle({
+        fontSize: 14,
+        wordWrap: true,
+        wordWrapWidth: 185,
+        
+    });
+    
+    var kennenEName = new PIXI.Text("Lightning Rush",style);
+    
+    kennenEName.x = 810;
+    kennenEName.y = 480;
+    kennenEName.style.fill = 0xFFFFFF;
+    
+    var kennenAbilityBox1= new PIXI.Graphics();
+    
+    kennenAbilityBox1.lineStyle(2, 0xA88238, 1);
+    kennenAbilityBox1.drawRoundedRect(750, 480, 200, 150, 16);
+    kennenAbilityBox1.endFill();
+    
+    var kennenEDescription = new PIXI.Text("Kennen morphs into a lightning form, enabling him to pass through units and apply a Mark of the Storm. Kennen gains movement speed when entering this form, and attack speed when leaving it.",style);
+    
+    kennenEDescription.x = 765;
+    kennenEDescription.y = 500;
+    kennenEDescription.style.fill = 0xFFFFFF;
+    kennenEDescription.style.align = "center";
+    
+    
+    
+    containerKennenE.addChild(kennenEName,kennenAbilityBox1,kennenEDescription);
+    app.stage.addChild(containerKennenE);
+    containerKennenE.visible = false;
+    
+    
+    
+// Shen ability name 2  
+    var containerKennenR = new PIXI.Container();
+
+    
+    var style = new PIXI.TextStyle({
+        fontSize: 14,
+        wordWrap: true,
+        wordWrapWidth: 185,
+        
+    });
+    
+    var kennenRName = new PIXI.Text("Slicing Maelstrom",style);
+    
+    kennenRName.x = 800;
+    kennenRName.y = 480;
+    kennenRName.style.fill = 0xFFFFFF;
+    
+    var kennenAbilityBox2= new PIXI.Graphics();
+    
+    kennenAbilityBox2.lineStyle(2, 0xA88238, 1);
+    kennenAbilityBox2.drawRoundedRect(750, 480, 200, 130, 16);
+    kennenAbilityBox2.endFill();
+    
+    var kennenRDescription = new PIXI.Text("Kennen summons a storm that strikes at nearby enemy champions for magical damage.",style);
+    
+    kennenRDescription.x = 765;
+    kennenRDescription.y = 500;
+    kennenRDescription.style.fill = 0xFFFFFF;
+    kennenRDescription.style.align = "center";    
+    
+    containerKennenR.addChild(kennenRName,kennenAbilityBox2,kennenRDescription);
+    app.stage.addChild(containerKennenR);
+    containerKennenR.visible = false;  
+    
+    
+    
+    var copyright = new PIXI.Text("All artwork, characters, ability names and descripitions belong to Riot Games.");
+    
+    copyright.x = 60;
+    copyright.y = 750;
+    copyright.style.fill = 0xFFFFFF;
+    
+    app.stage.addChild(copyright);
+    
+    
+    
+    
+    
+    
+    
+    
+    b1.childNode = [b2,b3,b4];
+    
+    b2.childNode = [b5,b6];
+    
+    b3.childNode = [b7,b8];
+    
+    b4.childNode = [b9,b10];
+    
+    b1.activate();
+    
+    //akali hover    
+    b2.on("pointerover",()=>{
+        containerAkali.visible = true;
+    })
+    b2.on("pointerout",()=>{
+        containerAkali.visible = false;
+    })
+//shen hover
+    b3.on("pointerover",()=>{
+        containerShen.visible = true;
+    })
+    b3.on("pointerout",()=>{
+        containerShen.visible = false;
+    })
+//kennen hover
+    b4.on("pointerover",()=>{
+        containerKennen.visible = true;
+    })
+    b4.on("pointerout",()=>{
+        containerKennen.visible = false;
+    })    
+    
+//akali abilities hover
+    b5.on("pointerover",()=>{
+        containerAkaliQ.visible = true;
+    })
+    b5.on("pointerout",()=>{
+        containerAkaliQ.visible = false;
+    })    
+    
+    b6.on("pointerover",()=>{
+        containerAkaliR.visible = true;
+    })
+    b6.on("pointerout",()=>{
+        containerAkaliR.visible = false;
+    })   
+    
+//shen abilities hover
+    b7.on("pointerover",()=>{
+        containerShenE.visible = true;
+    })
+    b7.on("pointerout",()=>{
+        containerShenE.visible = false;
+    })    
+    
+    b8.on("pointerover",()=>{
+        containerShenR.visible = true;
+    })
+    b8.on("pointerout",()=>{
+        containerShenR.visible = false;
+    })   
+
+//kennen abilities hover
+    b9.on("pointerover",()=>{
+        containerKennenE.visible = true;
+    })
+    b9.on("pointerout",()=>{
+        containerKennenE.visible = false;
+    })    
+    
+    b10.on("pointerover",()=>{
+        containerKennenR.visible = true;
+    })
+    b10.on("pointerout",()=>{
+        containerKennenR.visible = false;
+    }) 
+    
+  /* 
+  
+  all resources used in this project are in these links:
+  
+  https://na.leagueoflegends.com/en/game-info/champions/shen/
+  https://na.leagueoflegends.com/en/game-info/champions/akali/
+  https://na.leagueoflegends.com/en/game-info/champions/kennen/
+    
+  */  
+    
+</script>
+    
+    </body>
+</html>

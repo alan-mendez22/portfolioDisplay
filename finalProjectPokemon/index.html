@@ -1,0 +1,216 @@
+<!doctype html>
+<html>
+    <head>
+        <title>Pokemon Evolutions!</title>
+        <link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="style.css">
+    </head>
+    <body>
+        <div id="header">
+            <img src="pokemonTitle.png">
+        </div>
+        <nav>
+            <a href="index.html">Home</a> |
+            <a href="about.html">About Us</a> |
+            <a href="contact.html">Contact Us</a> 
+        </nav>
+        <div id="searchbar">
+            <input id="myInput" placeholder="Search here.." type='Text' disabled="true"/>
+        
+        <div id="blink">
+         <div id="results">
+            Loading...
+        </div>
+            
+        </div>
+        
+        <div id= "reload">
+            <a href="index.html">[Reload]</a>
+        </div>
+        <script>
+            var pokedex;
+            var xhr = new XMLHttpRequest();
+            var blink = document.getElementById('blink');
+            
+            
+            function viewPokemon(pokemon) { console.log("Loading Pokemon: "+pokemon); //Hide div and wait
+                
+                blink.classList.add("closed");
+                setTimeout(function() {
+                    loadSpecies(pokemon);
+                },1000);
+                
+            }
+            
+            function loadSpecies(pokemon) {
+                
+                //Eevee's shit here
+                if (pokemon == 133 | pokemon == 134 | pokemon == 135 | pokemon == 136 ) {
+                    
+                    blink.innerHTML = "<img src='eevee.jpg'>";
+                    blink.classList.remove("closed");
+                    
+                }
+                else {
+                    //If not
+                    xhr.onload = loadChain;
+                    xhr.open("GET","https://pokeapi.co/api/v2/pokemon-species/"+pokemon);
+                    xhr.send();
+                }
+            }
+            
+            function loadChain() {
+                
+                var data = JSON.parse(xhr.responseText);
+                
+                console.log(data);
+                
+                xhr.onload = showChain;
+                xhr.open("GET",data.evolution_chain.url);
+                xhr.send();
+                
+            }
+            
+            function showChain() {
+                //Set everything into the div
+                var data = JSON.parse(xhr.responseText);
+                
+                console.log(data);
+                
+                blink.innerHTML = "Evolutions:";
+                
+                /*
+                blink.innerHTML += `<img src="`+nameToImg(data.chain.species.name)+`">`;
+                
+                blink.innerHTML += `<img src="`+nameToImg(data.chain.evolves_to.species.name)+`">`;
+                
+                blink.innerHTML += `<img src="`+nameToImg(data.chain.evolves_to.evolves_to.species.name)+`">`;
+                */
+                
+                if (data.chain.species.name)
+                    blink.innerHTML += `<img src="`+nameToImg(data.chain.species.name)+`"> `;
+                
+                if (data.chain.evolves_to) if (data.chain.evolves_to.length > 0) {
+                    
+                    blink.innerHTML += `&#8594; <img src="`+nameToImg(data.chain.evolves_to[0].species.name)+`"> `;
+                
+                    if (data.chain.evolves_to[0].evolves_to) 
+                        if (data.chain.evolves_to[0].evolves_to.length > 0)
+                            blink.innerHTML += `&#8594; <img src="`+nameToImg(data.chain.evolves_to[0].evolves_to[0].species.name)+`"> `;
+                    
+                }
+                
+                blink.classList.remove("closed");
+                
+            }
+            
+            function nameToImg(name) {
+                
+                name = name.toLowerCase();
+                
+                for (var i in pokedex.pokemon) {
+                    
+                    if (pokedex.pokemon[i].name.toLowerCase() == name) {
+                        
+                        return pokedex.pokemon[i].img;
+                    
+                    }
+                    
+                }
+                
+                return "placeholder.jpg";// PLACEHOLDER IMAGE HERE TO COVER BASES
+                
+            }
+            
+            //blink.addEventListener("click",blinkClose);
+        
+        </script>
+        
+        
+        <script>
+            
+            //var xhr = new XMLHttpRequest();
+                xhr.onload = processPokemon;
+                xhr.open("GET","https://raw.githubusercontent.com/Biuni/PokemonGO-Pokedex/master/pokedex.json");
+                xhr.send();
+            
+            function processPokemon() {
+                
+                pokedex = JSON.parse(xhr.responseText);
+                
+                document.getElementById("myInput").disabled = false;
+                document.getElementById("results").innerHTML = "";
+                
+                console.log(pokedex);
+                
+                displayResults();
+            }
+            
+            function displayResults(query) {
+                
+                console.log(query);
+                
+                var showThese = [];
+                var result = "";
+                
+                //Check by name
+                for (var i in pokedex.pokemon) {
+                    
+                    if (pokedex.pokemon[i].name.search(new RegExp(query,"i")) != -1) {
+                        
+                        showThese.push(pokedex.pokemon[i]);
+                        
+                    }
+                    
+                }
+                
+                
+                for (var i in showThese) {
+                    
+                    result += `<div class="pokebox" onclick="viewPokemon(`+parseInt(showThese[i].num)+`)">`;
+                    result += `<img src="`+showThese[i].img+`"/>`;
+                    result += `<br/>` + showThese[i].name;
+                    result += `</div>`;
+                    
+                }
+                
+                document.getElementById("results").innerHTML = result;
+                
+            }
+            
+            /*
+            function viewPokemon(id) {
+                
+                console.log("You selected: " + id);
+                
+                //Hide the window
+                
+                //Query the api for evolution data
+                
+                //xhr query...
+                xhr.onload = viewEvolutionData;
+                xhr.open("GET",".../number/" + id);
+                xhr.send();
+                
+            }*/
+            
+            function viewEvolutionData() {
+                
+                //Put that data into the window
+                
+                //Show window
+                
+            }
+            
+        </script>
+        <script>
+        
+                document.getElementById("myInput").addEventListener("input",function() {
+                    displayResults(this.value);
+                });
+        
+        </script>
+        
+    
+    </body>
+</html>
